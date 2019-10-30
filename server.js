@@ -8,6 +8,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(dateLogger);
 server.use(logger);
+server.use(gateKeeper);
 
 server.use('/api/hubs', hubsRouter);
 
@@ -21,6 +22,18 @@ function logger(req, res, next) {
 	console.log(`${req.method} to ${req.url}`);
 
 	next();
+}
+
+//change the gateKeeper to return a 400 if no password is provided
+function gateKeeper(req, res, next) {
+	const password = req.headers.password;
+	if (!password) {
+		res.status(400).json({ message: 'please provide a password' });
+	} else if (password === 'mellon') {
+		next();
+	} else {
+		res.status(400).json({ you: 'shall not pass!' });
+	}
 }
 
 server.get('/', (req, res) => {
