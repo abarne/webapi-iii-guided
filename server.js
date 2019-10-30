@@ -19,6 +19,8 @@ function dateLogger(req, res, next) {
 
 function logger(req, res, next) {
 	console.log(`${req.method} to ${req.url}`);
+
+	next();
 }
 
 server.get('/', (req, res) => {
